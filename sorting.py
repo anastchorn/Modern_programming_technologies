@@ -1,16 +1,11 @@
 # Функція сортування бульбашкою
 def bubble_sort(arr):
-    
+    """ Сортує список за допомогою алгоритму сортування бульбашкою. """
     n = len(arr)
     for i in range(n):
-
+        # Останні i елементів вже на місці
         for j in range(n - i - 1):
+            # Змінюємо місцями елементи, якщо вони в неправильному порядку
             if arr[j] > arr[j + 1]:
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
     return arr
-
-
-if __name__ == "__main__":
-    unsorted_list = [64, 34, 25, 12, 22, 11, 90]
-    sorted_list = bubble_sort(unsorted_list)
-    print("Отсортований список:", sorted_list)
