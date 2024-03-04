@@ -1,8 +1,11 @@
 # Функція сортування бульбашкою
 def sort_list(arr):
+    """ Сортує список за допомогою алгоритму сортування бульбашкою. """
     n = len(arr)
     for i in range(n):
-        for j in range(0, n-i-1):
-            if arr[j] > arr[j+1]:
-                arr[j], arr[j+1] = arr[j+1], arr[j]
+        # Останні i елементів вже на місці
+        for j in range(n - i - 1):
+            # Змінюємо місцями елементи, якщо вони в неправильному порядку
+            if arr[j] > arr[j + 1]:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
     return arr
