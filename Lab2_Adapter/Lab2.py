@@ -11,7 +11,7 @@ class MusicPlayerAdapter(MusicPlayer):
         self.advanced_player = advanced_player
 
     def play_music(self, file_name):
-        if file_name:  # Перевірка, що рядок не порожній
+        if file_name: 
             self.advanced_player.play_sound(file_name)
 
 def main():
