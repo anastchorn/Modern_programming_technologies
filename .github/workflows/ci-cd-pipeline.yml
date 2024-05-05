@@ -2,9 +2,16 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main ]
+    paths:
+    - sorting.py
+    - test_sorting.py
+    
+    
   pull_request:
-    branches: [ main ]
+   paths:
+    - sorting.py
+    - test_sorting.py
+    
 
 jobs:
   lint:
