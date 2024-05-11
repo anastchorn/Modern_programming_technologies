@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+          with:
+            token: ${{ secrets.GH_TOKEN }}
       
       - name: Build Docker image
         run: docker build -t my-app:test .
