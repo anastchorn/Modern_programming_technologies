@@ -3,58 +3,56 @@ name: CI/CD Pipeline
 on:
   push:
     paths:
-    - sorting.py
-    - test_sorting.py
-    
-    
+      - sorting.py
+      - test_sorting.py
   pull_request:
-   paths:
-    - sorting.py
-    - test_sorting.py
-    
+    paths:
+      - sorting.py
+      - test_sorting.py
 
 jobs:
-  lint:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.8'
-    - name: Install dependencies
-      run: pip install flake8
-    - name: Run linting
-      run: flake8 .
+      - uses: actions/checkout@v2
+      
+      - name: Build Docker image
+        run: docker build -t my-app:test .
 
-  test:
-    needs: lint
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.8'
-    - name: Install dependencies
-      run: |
-        pip install pytest
-    - name: Run tests
-      run: pytest
+      - name: Run Docker container
+        run: docker run --name my-app-container my-app:test
+
+      - name: Copy test results from container
+        run: docker cp my-app-container:/app/test-results/ ./test-results/
+
+      - name: Checkout test-results branch or create it
+        run: |
+          git fetch
+          git checkout test-results || git checkout --orphan test-results
+
+      - name: Commit and push results
+        run: |
+          git config --global user.email "exiukaiwhooo@gmail.com"
+          git config --global user.name "Anastasia"
+          git add test-results/*
+          git commit -m "Update test results"
+          git push -u origin test-results
 
   build-and-push:
-    needs: test
+    needs: build-and-test
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKER_HUB_USERNAME }}
-        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-    - name: Build and push
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        push: true
-        tags: zikozikoni/workflows:latest
+      - uses: actions/checkout@v2
+      
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: zikozikoni/workflows:latest
