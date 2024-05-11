@@ -23,18 +23,20 @@ jobs:
       - name: Copy test results from container
         run: docker cp my-app-container:/app/test-results/ ./test-results/
 
-      - name: Checkout test-results branch or create it
+      - name: Checkout to test-results branch or create an orphan branch
         run: |
           git fetch
           git checkout test-results || git checkout --orphan test-results
+          git rm -rf .  
+          git clean -fdx  
 
-      - name: Commit and push results
+      - name: Add and commit test results
         run: |
           git config --global user.email "exiukaiwhooo@gmail.com"
           git config --global user.name "Anastasia"
           git add test-results/*
           git commit -m "Update test results"
-          git push -u origin test-results
+          git push -u origin test-results --force
 
   build-and-push:
     needs: build-and-test
