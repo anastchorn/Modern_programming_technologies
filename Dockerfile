@@ -1,11 +1,11 @@
-
 FROM python:3.8
-
 
 WORKDIR /app
 
-RUN pip install flake8
+COPY . /app
 
-COPY . .
+RUN pip install flake8 pytest
 
 RUN flake8 --ignore=E501 .
+
+CMD mkdir -p /app/test-results && pytest --junitxml=/app/test-results/results.xml -v
