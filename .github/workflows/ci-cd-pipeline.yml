@@ -40,6 +40,8 @@ jobs:
 
       - name: Add and commit test results
         run: |
+          git config --global user.email "exiukaiwhooo@gmail.com"
+          git config --global user.name "Anastasia"
           if [ -d "test-results/" ] && [ "$(ls -A test-results/)" ]; then
             git add test-results/*
             git commit -m "Update test results"
