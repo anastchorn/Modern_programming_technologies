@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3  
         with:
           token: ${{ secrets.GH_TOKEN }}
 
@@ -38,6 +38,7 @@ jobs:
             git config --global user.name "Anastasia"
             git reset --hard
             git commit --allow-empty -m "Initial empty commit"
+          fi
 
       - name: Add and commit test results
         run: |
@@ -53,7 +54,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3  
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
