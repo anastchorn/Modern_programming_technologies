@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MYCLASS_H
+#define MYCLASS_H
 
 #include <iostream>
 
@@ -7,9 +8,11 @@ public:
     int value;
     MyClass(int v);
     MyClass(const MyClass& other);
+    ~MyClass();
 };
 
 void modifyByValue(MyClass c);
 void modifyByReference(MyClass& c);
-MyClass createOnStack(int value);
-MyClass* createOnHeap(int value);
+void modifyByPointer(MyClass* c);
+
+#endif

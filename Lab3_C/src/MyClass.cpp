@@ -1,9 +1,14 @@
 #include "MyClass.h"
+#include <iostream>
 
 MyClass::MyClass(int v) : value(v) {}
 
 MyClass::MyClass(const MyClass& other) : value(other.value) {
     std::cout << "Copy constructor called\n";
+}
+
+MyClass::~MyClass() {
+    std::cout << "Destructor called\n";
 }
 
 void modifyByValue(MyClass c) {
@@ -14,10 +19,6 @@ void modifyByReference(MyClass& c) {
     c.value = 200;
 }
 
-MyClass createOnStack(int value) {
-    return MyClass(value);
-}
-
-MyClass* createOnHeap(int value) {
-    return new MyClass(value);
+void modifyByPointer(MyClass* c) {
+    c->value = 300;
 }
