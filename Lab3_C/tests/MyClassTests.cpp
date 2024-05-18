@@ -12,7 +12,7 @@
 #include <unistd.h>
 #endif
 
-size_t getHeapSize() {
+size_t getMemoryUsage() {
 #ifdef _WIN32
     PROCESS_MEMORY_COUNTERS info;
     GetProcessMemoryInfo(GetCurrentProcess(), &info, sizeof(info));
@@ -25,37 +25,37 @@ size_t getHeapSize() {
 }
 
 TEST_CASE("Object is created on the stack", "[stack]") {
-    size_t heap_before = getHeapSize();
+    size_t memory_before = getMemoryUsage();
     {
         MyClass obj(10);  
     }
-    size_t heap_after = getHeapSize();
+    size_t memory_after = getMemoryUsage();
 
-    std::cout << "Heap size before: " << heap_before << "\n";
-    std::cout << "Heap size after stack allocation: " << heap_after << "\n";
+    std::cout << "Memory usage before: " << memory_before << "\n";
+    std::cout << "Memory usage after stack allocation: " << memory_after << "\n";
 
-    REQUIRE(heap_before == heap_after);  
+    REQUIRE(memory_before == memory_after);  
 }
 
 TEST_CASE("Object is created on the heap", "[heap]") {
-    size_t heap_before = getHeapSize();
+    size_t memory_before = getMemoryUsage();
     std::vector<MyClass*> objects;
     for (int i = 0; i < 1000; ++i) {
         objects.push_back(new MyClass(20));  
     }
-    size_t heap_after = getHeapSize();
+    size_t memory_after = getMemoryUsage();
 
-    std::cout << "Heap size before: " << heap_before << "\n";
-    std::cout << "Heap size after allocation: " << heap_after << "\n";
+    std::cout << "Memory usage before: " << memory_before << "\n";
+    std::cout << "Memory usage after allocation: " << memory_after << "\n";
 
-    REQUIRE(heap_before < heap_after);  
+    REQUIRE(memory_before < memory_after);  
 
     for (auto obj : objects) {
         delete obj;
     }
-    size_t heap_after_delete = getHeapSize();
+    size_t memory_after_delete = getMemoryUsage();
 
-    std::cout << "Heap size after deletion: " << heap_after_delete << "\n";
+    std::cout << "Memory usage after deletion: " << memory_after_delete << "\n";
 }
 
 TEST_CASE("Passing by value does not change the original object", "[value_type]") {
@@ -82,37 +82,37 @@ TEST_CASE("Objects created on the heap are not automatically destroyed", "[heap]
 }
 
 TEST_CASE("Multiple objects created on the stack", "[stack_multiple]") {
-    size_t heap_before = getHeapSize();
+    size_t memory_before = getMemoryUsage();
     for (int i = 0; i < 10000; ++i) {
         MyClass obj(10); 
     }
-    size_t heap_after = getHeapSize();
+    size_t memory_after = getMemoryUsage();
 
-    std::cout << "Heap size before: " << heap_before << "\n";
-    std::cout << "Heap size after multiple stack allocations: " << heap_after << "\n";
+    std::cout << "Memory usage before: " << memory_before << "\n";
+    std::cout << "Memory usage after multiple stack allocations: " << memory_after << "\n";
 
-    REQUIRE(heap_before == heap_after);  
+    REQUIRE(memory_before == memory_after);  
 }
 
 TEST_CASE("Multiple objects created on the heap", "[heap_multiple]") {
     const int num_objects = 10000;
     MyClass* objects[num_objects];
 
-    size_t heap_before = getHeapSize();
+    size_t memory_before = getMemoryUsage();
     for (int i = 0; i < num_objects; ++i) {
         objects[i] = new MyClass(i);
     }
-    size_t heap_after_allocations = getHeapSize();
+    size_t memory_after_allocations = getMemoryUsage();
 
     for (int i = 0; i < num_objects; ++i) {
         delete objects[i];
     }
-    size_t heap_after_deletions = getHeapSize();
+    size_t memory_after_deletions = getMemoryUsage();
 
-    std::cout << "Heap size before: " << heap_before << "\n";
-    std::cout << "Heap size after allocations: " << heap_after_allocations << "\n";
-    std::cout << "Heap size after deletions: " << heap_after_deletions << "\n";
+    std::cout << "Memory usage before: " << memory_before << "\n";
+    std::cout << "Memory usage after allocations: " << memory_after_allocations << "\n";
+    std::cout << "Memory usage after deletions: " << memory_after_deletions << "\n";
 
-    REQUIRE(heap_before < heap_after_allocations);
-    REQUIRE(heap_after_deletions <= heap_after_allocations);
+    REQUIRE(memory_before < memory_after_allocations);
+    REQUIRE(memory_after_deletions <= memory_after_allocations);
 }
