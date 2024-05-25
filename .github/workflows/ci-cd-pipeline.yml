@@ -36,7 +36,7 @@ jobs:
         run: docker push ghcr.io/${{ github.repository_owner }}/modern_programming_technologies/my-app:test
 
       - name: Run Docker container
-        run: docker run --name my-app-container ghcr.io/${{ github.repository_owner }}/modern_programming_technologies/my-app:test test_sorting.py
+        run: docker run --name my-app-container ghcr.io/${{ github.repository_owner }}/modern_programming_technologies/my-app:test pytest test_sorting.py
 
       - name: Create test-results directory
         run: mkdir -p test-results/
