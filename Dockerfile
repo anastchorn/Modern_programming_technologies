@@ -6,4 +6,4 @@ COPY . .
 
 RUN pip install pytest
 
-CMD mkdir -p /app/test-results && pytest --junitxml=/app/test-results/results.xml -v
+CMD ["pytest", "--junitxml=/app/test-results/results.xml", "-v", "test_sorting.py"]
